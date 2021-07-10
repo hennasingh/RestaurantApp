@@ -5,4 +5,15 @@
     <string name="password">Enter your password</string>
     <string name="login">Login</string>
     <string name="create_account">Create Account</string>
+    <string name="category">Select Your Location</string>
+    <string name="junk">Junk Food Image</string>
+    <string name="welcome">Welcome to Hunger Times</string>
+
+    <string-array name="location_array">
+        <item>Bronx</item>
+        <item>Brooklyn</item>
+        <item>Manhattan</item>
+        <item>Queens</item>
+        <item>Staten Island</item>
+    </string-array>
 </resources>

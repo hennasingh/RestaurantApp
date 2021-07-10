@@ -71,7 +71,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun onLoginSuccess() {
         //Start Next Activity
-
+        finish()
     }
 
     private fun validateCredentials(): Boolean = when {

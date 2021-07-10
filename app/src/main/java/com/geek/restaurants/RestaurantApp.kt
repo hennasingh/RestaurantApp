@@ -6,7 +6,7 @@ import io.realm.mongodb.App
 import io.realm.mongodb.AppConfiguration
 import timber.log.Timber
 
-const val appId = ""
+const val appId = "restaurant-jjhgm"
 lateinit var restaurantApp: App
 
 class RestaurantApp : Application() {
