@@ -8,6 +8,8 @@
     <string name="category">Select Your Location</string>
     <string name="junk">Junk Food Image</string>
     <string name="welcome">Welcome to Hunger Times</string>
+    <string name="manhattan">Manhattan</string>
+    <string name="brooklyn">Brooklyn</string>
 
     <string-array name="location_array">
         <item>Bronx</item>
