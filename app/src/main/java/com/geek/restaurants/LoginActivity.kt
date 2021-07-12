@@ -66,7 +66,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun enableButtons() {
         button_create.isEnabled = true
-        button_create.isEnabled = true
+        button_login.isEnabled = true
     }
 
     private fun onLoginSuccess() {
