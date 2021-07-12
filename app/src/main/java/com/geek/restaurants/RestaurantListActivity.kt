@@ -2,6 +2,7 @@ package com.geek.restaurants
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
 import com.geek.restaurants.model.Restaurant
 import io.realm.Realm
@@ -9,13 +10,14 @@ import io.realm.RealmResults
 import io.realm.kotlin.where
 import io.realm.mongodb.User
 import io.realm.mongodb.sync.SyncConfiguration
-import kotlinx.android.synthetic.main.activity_restaurant_list.*
 import timber.log.Timber
 
 class RestaurantListActivity : AppCompatActivity() {
 
     private var user: User? = null
     private var borough: Realm? = null
+    //private lateinit var adapter: RestaurantAdapter
+   // private lateinit var recyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,6 +29,7 @@ class RestaurantListActivity : AppCompatActivity() {
 
         title = extras
         Timber.d("partition is $extras")
+       // recyclerView.layoutManager = LinearLayoutManager(this)
         displayRestaurantsAt(extras)
     }
 
@@ -43,25 +46,38 @@ class RestaurantListActivity : AppCompatActivity() {
     private fun displayRestaurantsAt(partition: String) {
 
         Timber.d("$user")
-        Timber.d("Setting Realm Configurtion with partition $partition")
+        Timber.d("Setting Realm Configuration with partition $partition")
         val config = SyncConfiguration.Builder(user, partition)
             .waitForInitialRemoteData()
             .build()
 
         Timber.d("Opening Realm instance Asynchronously")
-        Realm.getInstanceAsync(config, object:Realm.Callback() {
-            override fun onSuccess(realm: Realm) {
-                val restaurantList: RealmResults<Restaurant> = realm.where<Restaurant>().findAll()
-                Timber.d("Synced restaurants count ${restaurantList.size}")
-                Timber.d(restaurantList.asJSON())
-                updateUI(restaurantList)
-            }
-        })
+        val handler = Handler()
+        handler.postDelayed(Runnable {
+            Realm.getInstanceAsync(config, object:Realm.Callback() {
+                override fun onSuccess(realm: Realm) {
+                    borough = realm
+                   // updateUI(borough!!)
+                    val restaurantList: RealmResults<Restaurant> = realm.where<Restaurant>().findAll()
+                    updateUI(restaurantList)
+                }
+            })
+        }, 60000)
     }
 
     private fun updateUI(restaurantList: RealmResults<Restaurant>) {
 
-        tv_name.text = restaurantList[0]?.name
-        tv_cuisine.text = restaurantList[0]?.cuisine
+        Timber.d("Synced restaurants count ${restaurantList.size}")
+        Timber.d(restaurantList.asJSON())
+
+       // adapter = RestaurantAdapter(restaurantList)
+      //  recyclerView.adapter = adapter
+
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        borough!!.close()
     }
 }

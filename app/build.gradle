@@ -47,6 +47,6 @@ dependencies {
 
     //Recycler View and Realm Adaptors
     implementation "io.realm:android-adapters:4.0.0"
-    implementation "androidx.recyclerview:recyclerview:1.2.0"
+    implementation "androidx.recyclerview:recyclerview:1.2.1"
 
 }
