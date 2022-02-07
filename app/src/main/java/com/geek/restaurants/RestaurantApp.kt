@@ -15,7 +15,7 @@ class RestaurantApp : Application() {
     override fun onCreate() {
         super.onCreate()
         Realm.init(this)
-        RealmLog.setLevel(LogLevel.ALL)
+        //RealmLog.setLevel(LogLevel.ALL)
 
         Timber.plant(Timber.DebugTree())
 
