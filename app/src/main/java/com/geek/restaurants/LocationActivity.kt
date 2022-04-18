@@ -2,9 +2,11 @@ package com.geek.restaurants
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import io.realm.mongodb.User
 import kotlinx.android.synthetic.main.activity_location.*
+import org.bson.Document
 import timber.log.Timber
 
 class LocationActivity : AppCompatActivity() {

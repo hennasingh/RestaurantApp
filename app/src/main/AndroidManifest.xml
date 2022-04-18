@@ -10,7 +10,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".RestaurantListActivity"></activity>
+        <activity
+            android:name=".QueryAPI"
+            android:exported="false" />
+        <activity android:name=".RestaurantListActivity" />
         <activity android:name=".LocationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
