@@ -7,10 +7,10 @@ import org.bson.types.ObjectId
 
 open class Restaurant (
     @PrimaryKey var _id: ObjectId? = null,
-    var address: ResAddress? = null,
+    var address: RestaurantAddress? = null,
     var borough: String? = null,
     var cuisine: String? = null,
-    var grades: RealmList<ResGrades> = RealmList(),
+    var grades: RealmList<RestaurantGrades> = RealmList(),
     var name: String? = null,
     var restaurant_id: String? = null
 ): RealmObject() {}

@@ -6,7 +6,7 @@ import io.realm.annotations.RealmClass
 import io.realm.annotations.Required
 
 @RealmClass(embedded = true)
-open class ResAddress(
+open class RestaurantAddress(
     var building: String? = null,
     @Required
     var coord: RealmList<Double> = RealmList(),
