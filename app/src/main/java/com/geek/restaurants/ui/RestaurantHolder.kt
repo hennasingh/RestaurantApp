@@ -1,4 +1,4 @@
-package com.geek.restaurants
+package com.geek.restaurants.ui
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView

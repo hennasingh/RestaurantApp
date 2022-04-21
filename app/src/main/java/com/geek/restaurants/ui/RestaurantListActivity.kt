@@ -1,4 +1,4 @@
-package com.geek.restaurants
+package com.geek.restaurants.ui
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,7 +7,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.geek.restaurants.R
 import com.geek.restaurants.model.Restaurant
+import com.geek.restaurants.restaurantApp
 import io.realm.Realm
 import io.realm.RealmResults
 import io.realm.kotlin.where

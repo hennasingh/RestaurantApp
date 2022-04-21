@@ -1,8 +1,10 @@
-package com.geek.restaurants
+package com.geek.restaurants.ui
 
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.geek.restaurants.R
+import com.geek.restaurants.restaurantApp
 import io.realm.mongodb.Credentials
 import io.realm.mongodb.User
 import kotlinx.android.synthetic.main.activity_login.*

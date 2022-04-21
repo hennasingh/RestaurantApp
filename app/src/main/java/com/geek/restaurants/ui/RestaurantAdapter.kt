@@ -1,7 +1,8 @@
-package com.geek.restaurants
+package com.geek.restaurants.ui
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.geek.restaurants.R
 import com.geek.restaurants.model.Restaurant
 import io.realm.OrderedRealmCollection
 import io.realm.RealmRecyclerViewAdapter

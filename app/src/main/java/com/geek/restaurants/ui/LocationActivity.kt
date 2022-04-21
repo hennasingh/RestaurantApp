@@ -1,23 +1,21 @@
-package com.geek.restaurants
+package com.geek.restaurants.ui
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.geek.restaurants.model.Borough
-import com.geek.restaurants.model.Restaurant
 import io.realm.Realm
 import io.realm.RealmResults
 import io.realm.kotlin.where
 import io.realm.mongodb.User
 import io.realm.mongodb.sync.SyncConfiguration
 import kotlinx.android.synthetic.main.activity_location.*
-import org.bson.Document
 import timber.log.Timber
 import android.widget.LinearLayout
-import androidx.core.view.marginStart
+import com.geek.restaurants.R
+import com.geek.restaurants.restaurantApp
 
 
 class LocationActivity : AppCompatActivity() {
