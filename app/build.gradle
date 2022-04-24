@@ -62,4 +62,7 @@ dependencies {
     implementation "io.realm:android-adapters:4.0.0"
     implementation "androidx.recyclerview:recyclerview:1.2.1"
 
+    // Dependency to include Maps SDK for Android
+    implementation 'com.google.android.gms:play-services-maps:18.0.2'
+    implementation 'com.google.maps.android:android-maps-utils:2.2.0'
 }
