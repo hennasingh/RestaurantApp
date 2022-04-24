@@ -33,12 +33,11 @@ class LocationActivity : AppCompatActivity() {
         setContentView(R.layout.activity_location)
 
         user = restaurantApp.currentUser()
-        Timber.d("User is $user")
-        if (user == null) {
-            // if no user is currently logged in, start the login activity so the user can authenticate
-            Timber.d("User is  $user, calling Login")
-            startActivity(Intent(this, LoginActivity::class.java))
-        }
+//        Timber.d("User is $user")
+//        if (user == null) {
+//            // if no user is currently logged in, start the login activity so the user can authenticate
+//            Timber.d("User is  $user, calling Login")
+//        }
     }
 
     private fun displayLocations(partition: String) {

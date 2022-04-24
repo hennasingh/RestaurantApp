@@ -1,5 +1,6 @@
 package com.geek.restaurants.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -16,6 +17,12 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
+        user = restaurantApp.currentUser()
+
+        if(user != null){
+            startActivity(Intent(this, LocationActivity::class.java))
+        }
 
         button_login.setOnClickListener{
             login(false)
@@ -60,7 +67,7 @@ class LoginActivity : AppCompatActivity() {
                     enableButtons()
                     onLoginFailed(it.error.errorMessage ?: "An error occurred")
                 } else {
-                    onLoginSuccess()
+                    startActivity(Intent(this, LocationActivity::class.java))
                 }
             }
         }
@@ -69,11 +76,6 @@ class LoginActivity : AppCompatActivity() {
     private fun enableButtons() {
         button_create.isEnabled = true
         button_login.isEnabled = true
-    }
-
-    private fun onLoginSuccess() {
-        //Start Next Activity
-        finish()
     }
 
     private fun validateCredentials(): Boolean = when {
