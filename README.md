@@ -1,5 +1,5 @@
 # RestaurantApp (WIP)
 
-This will describe how to use MongoDB Query API to directly access collections from within the Android Application
+This will describe how to data in MongoDb is Synced to Mobile to create a restaurant app
 
 
