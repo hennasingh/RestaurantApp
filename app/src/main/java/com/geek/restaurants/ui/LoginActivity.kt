@@ -44,7 +44,7 @@ class LoginActivity : AppCompatActivity() {
         button_create.isEnabled = false
 
         val email = username.text.toString()
-        val password = password.toString()
+        val password = password.text.toString()
 
 
         if(createUser){
