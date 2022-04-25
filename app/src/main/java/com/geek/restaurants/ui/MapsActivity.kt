@@ -15,7 +15,6 @@ import timber.log.Timber
 
 class MapsActivity : AppCompatActivity() {
 
-    private lateinit var mMap: GoogleMap
     private  var latitude: Double = 0.0
     private  var longitude: Double =0.0
     private var restName: String? = ""
@@ -30,9 +29,6 @@ class MapsActivity : AppCompatActivity() {
         restName = intent.extras!!.getString("NAME")
 
 
-        Timber.d("Latitude received %s", latitude)
-
-
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
@@ -43,10 +39,11 @@ class MapsActivity : AppCompatActivity() {
 
     private fun addMarkers(googleMap: GoogleMap) {
 
-        val position = LatLng(latitude, longitude)
+        val position = LatLng(longitude, latitude)
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 15f))
+
         googleMap.addMarker(MarkerOptions().position(position).title(restName))
 
-       // googleMap.moveCamera(CameraUpdateFactory.newLatLng(position))
 
 
     }

@@ -14,7 +14,5 @@ open class User (
 
     var friends: RealmList<Friend> = RealmList(),
 
-    var sharedRestaurantId: RealmList<ObjectId> = RealmList(),
-
     var name: String = ""
 ): RealmObject() {}

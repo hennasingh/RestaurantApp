@@ -33,7 +33,7 @@ class RestaurantListActivity : AppCompatActivity() {
 
         val extras = intent.getStringExtra("EXTRA_PARTITION")
 
-        title = extras
+        title = extras!!
         Timber.d("partition is $extras")
         recyclerView = rv_list
        recyclerView.layoutManager = LinearLayoutManager(this)
