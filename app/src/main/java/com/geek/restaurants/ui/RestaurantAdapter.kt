@@ -33,6 +33,8 @@ class RestaurantAdapter(data: OrderedRealmCollection<Restaurant>):RealmRecyclerV
             intent.putExtra("LATITUDE", restaurant.address!!.coord[0])
             intent.putExtra("LONGITUDE", restaurant.address!!.coord[1])
             intent.putExtra("NAME", restaurant.name)
+            intent.putExtra("STREET", restaurant.address!!.street)
+            intent.putExtra("BOROUGH", restaurant.borough)
             parent.context.startActivity(intent)
         }
     }
