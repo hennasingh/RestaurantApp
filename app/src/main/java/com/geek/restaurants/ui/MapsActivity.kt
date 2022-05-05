@@ -1,18 +1,22 @@
 package com.geek.restaurants.ui
 
-import androidx.appcompat.app.AppCompatActivity
+import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.geek.restaurants.R
-import com.geek.restaurants.databinding.ActivityMapsBinding
-
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import timber.log.Timber
 import java.util.*
+
 
 class MapsActivity : AppCompatActivity() {
 
@@ -43,6 +47,7 @@ class MapsActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("PotentialBehaviorOverride")
     private fun addMarkers(googleMap: GoogleMap) {
 
         val position = LatLng(longitude, latitude)
@@ -57,6 +62,38 @@ class MapsActivity : AppCompatActivity() {
         googleMap.addMarker(MarkerOptions().position(position).snippet(snippet).title(borough))
 
 
+//        googleMap.setOnMarkerClickListener(OnMarkerClickListener { marker -> // on marker click we are getting the title of our marker
+//                //Call the function to send data to the friend
+//
+//
+//            false
+//        })
 
+
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater: MenuInflater = menuInflater
+        inflater.inflate(R.menu.friends, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        return when (item.itemId) {
+            R.id.friends -> {
+               val intent = Intent(this, FriendsActivity::class.java)
+                //save map data in Intent instead of calling click listener on Map
+
+                intent.putExtra("LATITUDE", latitude)
+                intent.putExtra("LONGITUDE", longitude)
+                intent.putExtra("NAME", restName)
+                intent.putExtra("STREET", street)
+                intent.putExtra("BOROUGH", borough)
+                startActivity(intent)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 }
