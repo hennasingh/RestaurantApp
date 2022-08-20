@@ -26,6 +26,7 @@
         android:gravity="center_horizontal"
         android:layout_marginTop="25dp"
         android:text="@string/welcome"
+        android:textStyle="bold"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -35,36 +36,70 @@
         android:id="@+id/label_select"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/category"
+        android:text="@string/locOrFood"
         android:gravity="center_horizontal"
-        android:textStyle="bold"
-        android:layout_marginTop="25dp"
-        android:textSize="18sp"
+        android:layout_marginTop="70dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/welcome" />
+        app:layout_constraintTop_toBottomOf="@+id/welcome"
+        app:layout_constraintBottom_toTopOf="@id/layoutLocation"/>
 
-    <ProgressBar
-        android:id="@+id/progress"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layoutLocation"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/label_select"
+        app:layout_constraintBottom_toTopOf="@id/layoutFood">
+
+        <EditText
+            android:id="@+id/etlocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/enterLocation"
+            android:inputType="text"
+            android:importantForAutofill="no" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layoutFood"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layoutLocation">
+
+        <EditText
+            android:id="@+id/etFood"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/enterCuisine"
+            android:inputType="text"
+            android:importantForAutofill="no" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/btnSearch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/search"
+        android:textColor="@color/colorPrimaryDark"
+        android:padding="8dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/colorAccent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@id/layoutFood"/>
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:padding="20dp"
-        app:layout_constraintTop_toBottomOf="@+id/label_select"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
-
-    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -14,6 +14,7 @@ import io.realm.Realm
 import io.realm.RealmResults
 import io.realm.kotlin.where
 import io.realm.mongodb.User
+import io.realm.mongodb.sync.Subscription
 import io.realm.mongodb.sync.SyncConfiguration
 import kotlinx.android.synthetic.main.activity_restaurant_list.*
 import timber.log.Timber
@@ -31,13 +32,38 @@ class RestaurantListActivity : AppCompatActivity() {
 
         checkUser()
 
-        val extras = intent.getStringExtra("EXTRA_PARTITION")
+        val location = intent.getStringExtra("LOCATION")
+        val food = intent.getStringExtra("FOOD")
 
-        title = extras!!
-        Timber.d("partition is $extras")
+        title = location
         recyclerView = rv_list
        recyclerView.layoutManager = LinearLayoutManager(this)
-        displayRestaurantsAt(extras)
+
+        displayRestaurants(location, food)
+    }
+
+    private fun displayRestaurants(location: String?, food: String?) {
+
+        val config = SyncConfiguration.Builder(user!!)
+            .initialSubscriptions {realm, subscriptions ->
+                subscriptions.add(
+                    Subscription.create("locationSubscription",realm.where(Restaurant::class.java).equalTo("borough", location) )
+                )
+
+                subscriptions.add(
+                    Subscription.create("foodSubscription", realm.where(Restaurant::class.java).equalTo("cuisine", food))
+                )
+            }
+            .build()
+
+        //Instantiate a realm instance with the flexible sync configuration
+        Realm.getInstanceAsync(config, object: Realm.Callback() {
+            override fun onSuccess(realm: Realm) {
+                val restaurantList = realm.where(Restaurant::class.java).equalTo("borough", location).findAll()
+                updateUI(restaurantList)
+            }
+
+        })
     }
 
     private fun checkUser() {
@@ -48,28 +74,6 @@ class RestaurantListActivity : AppCompatActivity() {
             Timber.d("User is null")
             startActivity(Intent(this, LoginActivity::class.java))
         }
-    }
-
-    private fun displayRestaurantsAt(partition: String) {
-
-        Timber.d("Setting Realm Configuration with partition $partition")
-        val config = SyncConfiguration.Builder(user, partition)
-            .waitForInitialRemoteData()
-            .build()
-
-        Timber.d("Opening Realm instance Asynchronously")
-        /**
-         * Should print false if its opening for the first time
-         */
-        Timber.d("${File(config.path).exists()}")
-
-            Realm.getInstanceAsync(config, object:Realm.Callback() {
-                override fun onSuccess(realm: Realm) {
-
-                    val restaurantList: RealmResults<Restaurant> = realm.where<Restaurant>().findAll()
-                    updateUI(restaurantList)
-                }
-            })
     }
 
     private fun updateUI(restaurantList: RealmResults<Restaurant>) {

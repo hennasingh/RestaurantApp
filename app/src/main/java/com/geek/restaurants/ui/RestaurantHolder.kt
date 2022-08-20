@@ -9,9 +9,11 @@ class RestaurantHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     private val resName = itemView.tv_name
     private val resCuisine = itemView.tv_cuisine
+    private val resStreet = itemView.tv_street
 
-    fun bindValues(Restaurant: Restaurant){
-        resName.text = Restaurant.name
-        resCuisine.text = Restaurant.cuisine
+    fun bindValues(restaurant: Restaurant){
+        resName.text = restaurant.name
+        resCuisine.text = restaurant.cuisine
+        resStreet.text = restaurant.address?.street
     }
 }

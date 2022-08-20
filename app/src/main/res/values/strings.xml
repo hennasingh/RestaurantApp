@@ -19,4 +19,8 @@
         <item>Staten Island</item>
     </string-array>
     <string name="title_activity_maps">MapsActivity</string>
+    <string name="locOrFood">Enter a location within New York, cuisine or both</string>
+    <string name="enterLocation">Enter Location within New York</string>
+    <string name="enterCuisine">Enter a cuisine</string>
+    <string name="search">Search</string>
 </resources>
