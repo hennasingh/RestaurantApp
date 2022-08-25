@@ -14,6 +14,7 @@ class RestaurantHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun bindValues(restaurant: Restaurant){
         resName.text = restaurant.name
         resCuisine.text = restaurant.cuisine
-        resStreet.text = restaurant.address?.street
+        val street = "${restaurant.borough}  ${restaurant.address?.street}"
+        resStreet.text = street
     }
 }

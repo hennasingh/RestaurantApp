@@ -25,6 +25,7 @@ class RestaurantListActivity : AppCompatActivity() {
     private var user: User? = null
     private lateinit var adapter: RestaurantAdapter
    private lateinit var recyclerView: RecyclerView
+   private lateinit var config: SyncConfiguration
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,28 +39,21 @@ class RestaurantListActivity : AppCompatActivity() {
         title = location
         recyclerView = rv_list
        recyclerView.layoutManager = LinearLayoutManager(this)
-
-        displayRestaurants(location, food)
+        displayRestaurants(food!!, location!!)
+        
     }
 
-    private fun displayRestaurants(location: String?, food: String?) {
-
-        val config = SyncConfiguration.Builder(user!!)
-            .initialSubscriptions {realm, subscriptions ->
-                subscriptions.add(
-                    Subscription.create("locationSubscription",realm.where(Restaurant::class.java).equalTo("borough", location) )
-                )
-
-                subscriptions.add(
-                    Subscription.create("foodSubscription", realm.where(Restaurant::class.java).equalTo("cuisine", food))
-                )
-            }
-            .build()
+    private fun displayRestaurants(food: String, location: String) {
 
         //Instantiate a realm instance with the flexible sync configuration
+
         Realm.getInstanceAsync(config, object: Realm.Callback() {
             override fun onSuccess(realm: Realm) {
-                val restaurantList = realm.where(Restaurant::class.java).equalTo("borough", location).findAll()
+                val restaurantList = realm.where(Restaurant::class.java)
+                    .equalTo("borough", location)
+                    .and()
+                    .equalTo("cuisine", food)
+                    .findAll()
                 updateUI(restaurantList)
             }
 
@@ -73,6 +67,18 @@ class RestaurantListActivity : AppCompatActivity() {
             // if no user is currently logged in, start the login activity so the user can authenticate
             Timber.d("User is null")
             startActivity(Intent(this, LoginActivity::class.java))
+        } else {
+             config = SyncConfiguration.Builder(user!!)
+                .initialSubscriptions {realm, subscriptions ->
+                    if (subscriptions.find("locationSubscription")==null)
+                        subscriptions.add(
+                            Subscription.create(
+                                "locationSubscription",
+                                realm.where(Restaurant::class.java)
+                            )
+                        )
+                }
+                .build()
         }
     }
 
