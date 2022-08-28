@@ -10,7 +10,7 @@ open class Restaurant (
     var address: RestaurantAddress? = null,
     var borough: String? = null,
     var cuisine: String? = null,
-    var grades: RealmList<RestaurantGrades> = RealmList(),
     var name: String? = null,
-    var restaurant_id: String? = null
-): RealmObject() {}
+    var restaurant_id: String? = null,
+    var reviews: RealmList<Reviews> = RealmList()
+): RealmObject()

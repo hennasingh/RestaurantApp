@@ -12,13 +12,11 @@ import com.geek.restaurants.model.Restaurant
 import com.geek.restaurants.restaurantApp
 import io.realm.Realm
 import io.realm.RealmResults
-import io.realm.kotlin.where
 import io.realm.mongodb.User
 import io.realm.mongodb.sync.Subscription
 import io.realm.mongodb.sync.SyncConfiguration
 import kotlinx.android.synthetic.main.activity_restaurant_list.*
 import timber.log.Timber
-import java.io.File
 
 class RestaurantListActivity : AppCompatActivity() {
 

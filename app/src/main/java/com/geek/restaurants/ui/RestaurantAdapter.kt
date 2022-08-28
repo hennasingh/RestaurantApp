@@ -3,12 +3,10 @@ package com.geek.restaurants.ui
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat.startActivity
 import com.geek.restaurants.R
 import com.geek.restaurants.model.Restaurant
 import io.realm.OrderedRealmCollection
 import io.realm.RealmRecyclerViewAdapter
-import timber.log.Timber
 
 class RestaurantAdapter(data: OrderedRealmCollection<Restaurant>):RealmRecyclerViewAdapter<Restaurant, RestaurantHolder>(data, true) {
 
@@ -26,5 +24,11 @@ class RestaurantAdapter(data: OrderedRealmCollection<Restaurant>):RealmRecyclerV
     override fun onBindViewHolder(holder: RestaurantHolder, position: Int) {
         val restaurant = getItem(position)
         holder.bindValues(restaurant!!)
+
+        holder.itemView.setOnClickListener{
+            val intent = Intent(parent.context,RestaurantDetailActivity::class.java)
+            intent.putExtra("RESTID", restaurant.restaurant_id)
+            parent.context.startActivity(intent)
+        }
     }
 }
