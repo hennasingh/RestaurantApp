@@ -10,8 +10,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.geek.restaurants.R
 import com.geek.restaurants.model.Restaurant
 import com.geek.restaurants.restaurantApp
+import io.realm.OrderedCollectionChangeSet
 import io.realm.Realm
 import io.realm.RealmResults
+import io.realm.kotlin.syncSession
 import io.realm.mongodb.User
 import io.realm.mongodb.sync.Subscription
 import io.realm.mongodb.sync.SyncConfiguration
@@ -20,42 +22,35 @@ import timber.log.Timber
 
 class RestaurantListActivity : AppCompatActivity() {
 
+    private lateinit var restaurantList: RealmResults<Restaurant>
+    private var food: String? = null
+    private var location: String? = null
     private var user: User? = null
     private lateinit var adapter: RestaurantAdapter
    private lateinit var recyclerView: RecyclerView
    private lateinit var config: SyncConfiguration
+   private lateinit var realm : Realm
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_restaurant_list)
 
-        checkUser()
-
-        val location = intent.getStringExtra("LOCATION")
-        val food = intent.getStringExtra("FOOD")
+        location = intent.getStringExtra("LOCATION")
+        food = intent.getStringExtra("FOOD")
 
         title = location
         recyclerView = rv_list
        recyclerView.layoutManager = LinearLayoutManager(this)
-        displayRestaurants(food!!, location!!)
-        
+
+        checkUser()
     }
 
-    private fun displayRestaurants(food: String, location: String) {
-
-        //Instantiate a realm instance with the flexible sync configuration
-
-        Realm.getInstanceAsync(config, object: Realm.Callback() {
-            override fun onSuccess(realm: Realm) {
-                val restaurantList = realm.where(Restaurant::class.java)
-                    .equalTo("borough", location)
-                    .and()
-                    .equalTo("cuisine", food)
-                    .findAll()
-                updateUI(restaurantList)
+    private fun downloadChangesInBackground() {
+        Thread {
+            Realm.getInstance(config).use{ realm ->
+                realm.syncSession.downloadAllServerChanges()
             }
-
-        })
+        }.start()
     }
 
     private fun checkUser() {
@@ -65,19 +60,58 @@ class RestaurantListActivity : AppCompatActivity() {
             // if no user is currently logged in, start the login activity so the user can authenticate
             Timber.d("User is null")
             startActivity(Intent(this, LoginActivity::class.java))
-        } else {
-             config = SyncConfiguration.Builder(user!!)
-                .initialSubscriptions {realm, subscriptions ->
-                    if (subscriptions.find("locationSubscription")==null)
-                        subscriptions.add(
-                            Subscription.create(
-                                "locationSubscription",
-                                realm.where(Restaurant::class.java)
-                            )
+        }
+        else {
+            initializeRealm()
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        realm.close()
+    }
+
+    private fun initializeRealm() {
+        config = SyncConfiguration.Builder(user!!)
+            .initialSubscriptions {realm, subscriptions ->
+                    subscriptions.addOrUpdate(
+                        Subscription.create(
+                            "restaurantSubscription",
+                            realm.where(Restaurant::class.java)
                         )
-                }
-                .build()
-            Realm.setDefaultConfiguration(config)
+                    )
+            }
+            .build()
+        Realm.setDefaultConfiguration(config)
+
+        //downloadChangesInBackground() //this is not actually needed
+
+        //Instantiate a realm instance with the flexible sync configuration
+        Realm.getInstanceAsync(config, object: Realm.Callback() {
+            override fun onSuccess(realm: Realm) {
+                this@RestaurantListActivity.realm = realm
+                onAfterRealmInit()
+            }
+        })
+    }
+
+    private fun onAfterRealmInit() {
+
+
+//        val restaurantList = realm.where(Restaurant::class.java)
+//            .equalTo("borough", location)
+//            .and()
+//            .equalTo("cuisine", food)
+//            .findAll()
+
+        restaurantList = realm.where(Restaurant::class.java)
+            .equalTo("borough", location)
+            .and()
+            .equalTo("cuisine", food)
+            .findAllAsync()
+
+        restaurantList.addChangeListener { t: RealmResults<Restaurant>, _: OrderedCollectionChangeSet ->
+            updateUI(t)
         }
     }
 

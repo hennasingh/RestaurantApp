@@ -3,13 +3,12 @@ package com.geek.restaurants.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.geek.restaurants.R
+import com.geek.restaurants.restaurantApp
 import io.realm.mongodb.User
 import kotlinx.android.synthetic.main.activity_location.*
-import android.widget.Toast
-import com.geek.restaurants.R
-import com.geek.restaurants.model.Restaurant
-import com.geek.restaurants.restaurantApp
 
 
 class LocationActivity : AppCompatActivity() {
@@ -31,18 +30,21 @@ class LocationActivity : AppCompatActivity() {
         if(!credentialsValid()){
             fieldsEmptyError("Both fields cannot be empty")
             return
+        } else {
+            val location = etlocation.text.toString()
+            val food = etFood.text.toString()
+
+            //once validated, pass the values to List Activity to display
+
+            val intent = Intent(applicationContext, RestaurantListActivity::class.java)
+            intent.putExtra("LOCATION", location)
+            intent.putExtra("FOOD", food)
+            startActivity(intent)
+
         }
-        val location = etlocation.text.toString()
-        val food = etFood.text.toString()
-
-        //once validated, pass the values to List Activity to display
-
-        val intent = Intent(applicationContext, RestaurantListActivity::class.java)
-        intent.putExtra("LOCATION", location)
-        intent.putExtra("FOOD", food)
-        startActivity(intent)
 
     }
+
     private fun fieldsEmptyError(errorMsg: String) {
 
         Toast.makeText(baseContext, errorMsg, Toast.LENGTH_LONG).show()
