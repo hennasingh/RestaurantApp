@@ -77,6 +77,7 @@ class RestaurantListActivity : AppCompatActivity() {
                         )
                 }
                 .build()
+            Realm.setDefaultConfiguration(config)
         }
     }
 

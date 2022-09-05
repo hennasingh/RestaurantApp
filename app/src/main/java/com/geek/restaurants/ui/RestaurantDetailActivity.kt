@@ -12,16 +12,12 @@ import com.geek.restaurants.R
 import com.geek.restaurants.model.Restaurant
 import com.geek.restaurants.model.Reviews
 import com.geek.restaurants.restaurantApp
-import io.realm.OrderedCollectionChangeSet
-import io.realm.OrderedRealmCollectionChangeListener
+import io.realm.ObjectChangeSet
 import io.realm.Realm
 import io.realm.RealmList
 import io.realm.kotlin.where
 import io.realm.mongodb.sync.SyncConfiguration
 import kotlinx.android.synthetic.main.activity_restaurant_detail.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class RestaurantDetailActivity : AppCompatActivity() {
@@ -35,17 +31,18 @@ class RestaurantDetailActivity : AppCompatActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        // UI THREAD
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_restaurant_detail)
 
         restID = intent.getStringExtra("RESTID")
         Timber.d("RestID $restID")
 
-        Timber.d("Setting Realm instance again")
-        restaurantApp.currentUser()?.apply {
-            config = SyncConfiguration.Builder(this).build()
-        }
         recyclerView = rvReviews
+
+        realm = Realm.getDefaultInstance()
+
         addReviewBtn.setOnClickListener { 
             val input = EditText(this)
             val dialogBuilder = AlertDialog.Builder(this)
@@ -67,62 +64,69 @@ class RestaurantDetailActivity : AppCompatActivity() {
 
     }
 
-    private fun addReviewToDatabase(review: String) {
+    override fun onDestroy() {
+        super.onDestroy()
 
-        val userReview = Reviews(review, restaurantApp.currentUser()?.id, restaurantApp.currentUser()?.profile?.name)
-        CoroutineScope(Dispatchers.IO).launch {
-            realm.copyToRealmOrUpdate(userReview)
+        realm.close()
+    }
+
+    private fun addReviewToDatabase(review: String) {
+        realm.executeTransactionAsync { transactionRealm: Realm ->
+            // NOT UI THREAD - BG THREAD
+            val restaurant = transactionRealm.where<Restaurant>()
+                .equalTo("restaurant_id", restID)
+                .findFirst()
+
+            val userReview = Reviews(review, restaurantApp.currentUser()?.id, restaurantApp.currentUser()?.profile?.name)
+            restaurant!!.reviews.add(userReview)
         }
     }
 
     override fun onStart() {
         super.onStart()
-        getRestDetail(config)
-
+        getRestDetail()
     }
 
-    private fun getRestDetail(config: SyncConfiguration) {
+    private fun getRestDetail() {
+        val restaurant = realm.where<Restaurant>()
+            .equalTo("restaurant_id", restID)
+            .findFirstAsync()
 
-       Realm.getInstanceAsync(config, object: Realm.Callback() {
-           override fun onSuccess(realm: Realm) {
-               val restaurant = realm.where<Restaurant>().equalTo("restaurant_id", restID).findFirst()
-               Timber.d("%s", restaurant)
+        restaurant.addChangeListener { restaurant: Restaurant, changeSet: ObjectChangeSet? ->
+            // UI Thread - Looper
+            title = restaurant.name
+            tv_name.text = restaurant.name
+            """${restaurant.address?.building} ${restaurant.address?.street} ${restaurant.address?.zipcode}""".also {
+                tvAddress.text = it
+            }
 
-               restaurant?.apply {
-                   title = this.name
-                   tv_name.text = this.name
-                   """${address?.building} ${address?.street} ${address?.zipcode}""".also {
-                       tvAddress.text = it
-                   }
-                   if(reviews.size == 0) {
-                       tvNoReview.visibility = View.VISIBLE
-                       progress.visibility = View.GONE
-                   } else {
-                       displayReviewAdapter(reviews)
-                   }
-               }
-               callChangeListener(restaurant)
-
-           }
-
-       })
-
-    }
-
-    private fun callChangeListener(restaurant: Restaurant?) {
-
-        val listener = OrderedRealmCollectionChangeListener{ _: RealmList<Reviews>?, changeSet: OrderedCollectionChangeSet? ->
-            for(range in changeSet!!.insertionRanges){
-                if(restaurant?.reviews?.size==0){
-                    tvNoReview.visibility = View.VISIBLE
-                    progress.visibility = View.GONE
-                }else {
-                    displayReviewAdapter(restaurant!!.reviews)
-                }
+            if (restaurant.reviews.size == 0) {
+                tvNoReview.visibility = View.VISIBLE
+                progress.visibility = View.GONE
+            } else {
+                displayReviewAdapter(restaurant.reviews)
             }
         }
-        restaurant!!.reviews.addChangeListener(listener)
-    }
+
+//            callChangeListener(restaurant)
+
+        }
+
+
+//    private fun callChangeListener(restaurant: Restaurant?) {
+//
+//        val listener = OrderedRealmCollectionChangeListener{ _: RealmList<Reviews>?, changeSet: OrderedCollectionChangeSet? ->
+//            for(range in changeSet!!.insertionRanges){
+//                if(restaurant?.reviews?.size==0){
+//                    tvNoReview.visibility = View.VISIBLE
+//                    progress.visibility = View.GONE
+//                }else {
+//                    displayReviewAdapter(restaurant!!.reviews)
+//                }
+//            }
+//        }
+//        restaurant!!.reviews.addChangeListener(listener)
+//    }
 
     private fun displayReviewAdapter(reviews: RealmList<Reviews>) {
         adapter = ReviewsAdapter(reviews)
