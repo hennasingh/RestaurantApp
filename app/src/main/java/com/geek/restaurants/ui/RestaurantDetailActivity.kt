@@ -94,17 +94,20 @@ class RestaurantDetailActivity : AppCompatActivity() {
 
         restaurant.addChangeListener { restaurant: Restaurant, changeSet: ObjectChangeSet? ->
             // UI Thread - Looper
-            title = restaurant.name
-            tv_name.text = restaurant.name
-            """${restaurant.address?.building} ${restaurant.address?.street} ${restaurant.address?.zipcode}""".also {
-                tvAddress.text = it
-            }
+            if (restaurant.isValid) {
 
-            if (restaurant.reviews.size == 0) {
-                tvNoReview.visibility = View.VISIBLE
-                progress.visibility = View.GONE
-            } else {
-                displayReviewAdapter(restaurant.reviews)
+                title = restaurant.name
+                tv_name.text = restaurant.name
+                """${restaurant.address?.building} ${restaurant.address?.street} ${restaurant.address?.zipcode}""".also {
+                    tvAddress.text = it
+                }
+
+                if (restaurant.reviews.size == 0) {
+                    tvNoReview.visibility = View.VISIBLE
+                    progress.visibility = View.GONE
+                } else {
+                    displayReviewAdapter(restaurant.reviews)
+                }
             }
         }
 
