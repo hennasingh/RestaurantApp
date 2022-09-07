@@ -77,7 +77,9 @@ class RestaurantDetailActivity : AppCompatActivity() {
                 .equalTo("restaurant_id", restID)
                 .findFirst()
 
-            val userReview = Reviews(review, restaurantApp.currentUser()?.id, restaurantApp.currentUser()?.profile?.name)
+            val userReview = Reviews(review,
+                restaurantApp.currentUser()?.id,
+                restaurantApp.currentUser()?.profile?.email)
             restaurant!!.reviews.add(userReview)
         }
     }
